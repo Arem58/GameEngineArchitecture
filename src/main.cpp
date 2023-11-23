@@ -1,6 +1,6 @@
 #include "print.h"
 
-#include "Pong.h"
+#include "Pong/Pong.h"
 
 int main()
 {

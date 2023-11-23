@@ -1,5 +1,5 @@
 #pragma once
-#include "Game.h"
+#include "Game/Game.h"
 
 class Pong : public Game
 {
@@ -14,7 +14,10 @@ public:
 
 private:
     SDL_Rect ball;
-    SDL_Rect paddle;
+    SDL_Rect left_paddle;
+    SDL_Rect right_paddle;
     int ball_speed_x;
     int ball_speed_y;
+    bool keyState[4];
+    enum keys {UP, DOWN, W, S};
 };
