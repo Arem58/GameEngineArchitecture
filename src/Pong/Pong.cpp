@@ -46,7 +46,7 @@ void Pong::update()
     print("pong update");
 
     // Rebote horizontal
-    // Lado derecho
+    // Lado izquierdo
     if (ball.x <= left_paddle.x + left_paddle.w)
     {
         if (ball.y + ball.h >= left_paddle.y && ball.y <= left_paddle.y + left_paddle.h)
@@ -58,11 +58,11 @@ void Pong::update()
         }
         else
         {
-            print("Jugador 1 gana!!!");
+            print("Jugador 2 gana!!!");
             isRunning = false;
         }
     }
-    // Lado izquierdo
+    // Lado derecho
     if (ball.x >= right_paddle.x - ball.w)
     {
         if (ball.y + ball.h >= right_paddle.y && ball.y <= right_paddle.y + right_paddle.h)
@@ -74,7 +74,7 @@ void Pong::update()
         }
         else
         {
-            print("Jugador 2 gana!!!");
+            print("Jugador 1 gana!!!");
             isRunning = false;
         }
     }
