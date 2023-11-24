@@ -14,6 +14,7 @@ struct ColliderComponent
 struct PlayerComponent
 {
     short moveSpeed;
+    char playerNumber;
 };
 
 

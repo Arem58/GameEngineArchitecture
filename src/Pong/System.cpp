@@ -46,33 +46,45 @@ MovementUpdateSystem::MovementUpdateSystem(int screen_width, int screen_height)
 
 void MovementUpdateSystem::run(double dT)
 {
-    const auto view = scene->r.view<TransformComponent, SpeedComponent>();
+    const auto view = scene->r.view<NameComponent, TransformComponent, SpeedComponent>();
     for (const entt::entity e : view)
     {
         TransformComponent &t = view.get<TransformComponent>(e);
         SpeedComponent &m = view.get<SpeedComponent>(e);
+        NameComponent &n = view.get<NameComponent>(e);
 
         if (m.x == 0 && m.y == 0)
         {
             continue;
         }
 
-        if (t.position.x <= 0)
+        if (n.name == "ball")
         {
-            m.x *= -1;
-        }
-        if (t.position.x >= screen_width - 20)
-        {
-            m.x *= -1;
-        }
-        if (t.position.y <= 0)
-        {
-            m.y *= -1;
-        }
-        if (t.position.y > screen_height - 20)
-        {
-            print("You lose.");
-            exit(1);
+
+            if (t.position.x <= 0)
+            {
+                print("Jugador 2 gana!!!");
+                exit(0);
+            }
+            if (t.position.x >= screen_width - 20)
+            {
+                print("Jugador 1 gana!!!");
+                exit(0);
+            }
+            if (t.position.y <= 0)
+            {
+                m.y *= -1;
+                
+                m.x *= 1.1f;
+                m.y *= 1.1f;
+            }
+            if (t.position.y > screen_height - 20)
+            {
+                m.y *= -1;
+
+                m.x *= 1.1f;
+                m.y *= 1.1f;
+            }
         }
 
         t.position.x += m.x * dT;
@@ -87,22 +99,36 @@ void PlayerInputEventSystem::run(SDL_Event event)
         {
             if (event.type == SDL_KEYDOWN)
             {
+                if (player.playerNumber == 0)
                 {
                     switch (event.key.keysym.sym)
                     {
-                    case SDLK_j:
-                        speed.x = -player.moveSpeed;
+                    case SDLK_w:
+                        speed.y = -player.moveSpeed;
                         break;
 
-                    case SDLK_l:
-                        speed.x = player.moveSpeed;
+                    case SDLK_s:
+                        speed.y = player.moveSpeed;
+                        break;
+                    }
+                }
+                else if (player.playerNumber == 1)
+                {
+                    switch (event.key.keysym.sym)
+                    {
+                    case SDLK_i:
+                        speed.y = -player.moveSpeed;
+                        break;
+
+                    case SDLK_k:
+                        speed.y = player.moveSpeed;
                         break;
                     }
                 }
             }
             if (event.type == SDL_KEYUP)
             {
-                speed.x = 0;
+                speed.y = 0;
             }
         });
 }
@@ -139,6 +165,6 @@ void BounceUpdateSystem::run(double dT)
               {
         if(c.triggered){
             c.triggered = false;
-            s.y *= -1.2;
+            s.x *= -1.1;
         } });
 }
