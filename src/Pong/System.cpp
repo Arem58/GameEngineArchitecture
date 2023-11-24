@@ -91,11 +91,11 @@ void PlayerInputEventSystem::run(SDL_Event event)
                     switch (event.key.keysym.sym)
                     {
                     case SDLK_j:
-                        speed.x -= player.moveSpeed;
+                        speed.x = -player.moveSpeed;
                         break;
 
                     case SDLK_l:
-                        speed.x += player.moveSpeed;
+                        speed.x = player.moveSpeed;
                         break;
                     }
                 }
