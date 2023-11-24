@@ -1,37 +1,45 @@
-#include "Game.h"
+#include <SDL2/SDL.h>
 #include <print.h>
+#include "Game.h"
+#include "isDefined.h"
 
-Game::Game(const char *name, int width, int height)
-    : screen_width(width), screen_height(height)
+Game::Game(const char *title, int width, int height)
 {
     print("Game Constructor");
 
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    window = SDL_CreateWindow(name, 0, 0, width, height, 0);
-    renderer = SDL_CreateRenderer(window, 0, 0);
+    window = SDL_CreateWindow(title, 0, 0, width, height, 0);
+    renderer = SDL_CreateRenderer(window, -1, 0);
 
-    lastFPSUpdate = 0;
-    frameStartTimestamp = 0;
-    frameEndTimestamp = 0;
-    frameCountPerSecond = 0;
-    FPS = 0.0;
+    SDL_SetRenderDrawColor(renderer, 200, 255, 255, 1);
+    print("Game Start!");
 
     int MAX_FPS = 60;
     frameDuration = (1.0f / MAX_FPS) * 1000.0f;
+
+    screen_width = width;
+    screen_height = height;
+
+    isRunning = true;
+
+    // initial frame count variables
     frameCount = 0;
+    lastFPSUpdateTime = 0;
+    FPS = 0;
+
+    frameStartTimestamp = 0;
+    frameEndTimestamp = 0;
 }
 
 Game::~Game()
 {
-    print("Game Destructor");
-
-    SDL_DestroyWindow(window);
 }
 
 void Game::setup()
 {
-    print("Game setup");
+    isDefined(currentScene, "CurrentScene is not initialized");
+    currentScene->setup();
 }
 
 void Game::frameStart()
@@ -63,47 +71,53 @@ void Game::frameEnd()
 
     // FPS Calculation
     frameCount++;
-    frameCountPerSecond++;
+    // Update FPS counter every second
     Uint32 currentTime = SDL_GetTicks();
-    Uint32 timeElapsed = currentTime - lastFPSUpdate;
 
-    if (timeElapsed > 1000)
+    if (currentTime - lastFPSUpdateTime > 1000)
     {
-        FPS = frameCountPerSecond / (timeElapsed / 1000);
-        lastFPSUpdate = currentTime;
-        frameCountPerSecond = 0;
+        FPS = frameCount / ((currentTime - lastFPSUpdateTime) / 1000.0f);
+        lastFPSUpdateTime = currentTime;
+        frameCount = 0;
     }
-    vprint(FPS);
     print("=================================");
 }
 
 void Game::handleEvents()
 {
     SDL_Event event;
-    while (SDL_PollEvent(&event))
+    while (SDL_PollEvent(&event) != 0)
     {
         if (event.type == SDL_QUIT)
         {
             isRunning = false;
         }
-    }
 
-    print("handleEvents");
+        currentScene->processEvents(event);
+    }
 }
 
 void Game::update()
 {
-    print("update");
+    currentScene->update(dT);
 }
 
 void Game::render()
 {
-    print("render");
-
-    // SDL_SetRenderDrawColor(renderer, 1, 0, 0, 1);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 1);
     SDL_RenderClear(renderer);
 
+    currentScene->render(renderer);
+
     SDL_RenderPresent(renderer);
+    vprint(FPS);
+}
+
+void Game::clean(){
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_Quit();
+    print("Game Over");
 }
 
 bool Game::running()
@@ -125,4 +139,14 @@ void Game::run()
 
         frameEnd();
     }
+
+    clean();
+}
+
+void Game::setScene(std::unique_ptr<Scene> newScene) {
+    currentScene = std::move(newScene);
+}
+
+Scene* Game::getCurrentScene() const {
+    return currentScene.get();
 }
