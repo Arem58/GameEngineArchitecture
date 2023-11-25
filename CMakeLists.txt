@@ -9,6 +9,7 @@ set(CMAKE_CXX_EXTENSIONS off)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
+set(SDL2_IMAGE_LIBRARIES "/usr/lib/libSDL2_image.so")
 
 file(
     GLOB_RECURSE 
@@ -30,5 +31,5 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     ${SDL2_LIBRARIES}
-    SDL_image
+    ${SDL2_IMAGE_LIBRARIES}
 )
