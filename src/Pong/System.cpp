@@ -1,6 +1,7 @@
 #include <print.h>
 #include "System.h"
 #include "Components.h"
+#include "Game/ScriptingManager.h"
 
 HelloSystem::HelloSystem()
 {
@@ -74,7 +75,7 @@ void MovementUpdateSystem::run(double dT)
             if (t.position.y <= 0)
             {
                 m.y *= -1;
-                
+
                 m.x *= 1.1f;
                 m.y *= 1.1f;
             }
@@ -167,4 +168,47 @@ void BounceUpdateSystem::run(double dT)
             c.triggered = false;
             s.x *= -1.1;
         } });
+}
+
+void EnemyMoveSystem::run(double dT)
+{
+    auto ballView = scene->r.view<NameComponent, TransformComponent>();
+    auto paddleView = scene->r.view<TransformComponent, PlayerComponent, SpeedComponent, NameComponent>();
+
+    float ballPosY;
+    float paddlePosY;
+    SpeedComponent *paddleSpeed = nullptr;
+
+    for (auto ballEntity : ballView)
+    {
+        NameComponent &ballName = ballView.get<NameComponent>(ballEntity);
+
+        if (ballName.name == "ball")
+        {
+            TransformComponent &ballTransform = ballView.get<TransformComponent>(ballEntity);
+            ballPosY = ballTransform.position.y;
+            break;
+        }
+    }
+
+    for (const entt::entity e : paddleView)
+    {
+        PlayerComponent &p = paddleView.get<PlayerComponent>(e);
+        auto &paddleName = paddleView.get<NameComponent>(e);
+
+        if (paddleName.name == "paddle2" && p.playerNumber == 2)
+        {
+            TransformComponent &t = paddleView.get<TransformComponent>(e);
+            // auto &paddleTransform = paddleView.get<TransformComponent>(e);
+            paddlePosY = t.position.y;
+            paddleSpeed = &paddleView.get<SpeedComponent>(e);
+            break;
+        }
+    }
+
+    if (paddleSpeed){
+        sol::table speedTable = ScriptingManager::lua.create_table_with("value", paddleSpeed->y);
+        ScriptingManager::lua["paddleMovement"](ballPosY, paddlePosY, speedTable);
+        paddleSpeed->y = speedTable["value"];
+    }
 }

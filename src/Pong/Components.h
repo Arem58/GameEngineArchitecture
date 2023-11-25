@@ -14,7 +14,7 @@ struct ColliderComponent
 struct PlayerComponent
 {
     short moveSpeed;
-    char playerNumber;
+    char playerNumber; // 2 es para IA (1, player 1 , 2, player 2)
 };
 
 

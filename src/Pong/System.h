@@ -48,3 +48,8 @@ class BounceUpdateSystem : public UpdateSystem
 public:
     void run(double dT);
 };
+
+class EnemyMoveSystem : public UpdateSystem {
+    public: 
+    void run(double dT) override;
+};

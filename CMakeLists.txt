@@ -5,10 +5,13 @@ project(GAME VERSION 1.0)
 # Enable C++20 features
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS off)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
+
+find_package(Lua REQUIRED)
 
 file(
     GLOB_RECURSE 
@@ -30,4 +33,5 @@ target_include_directories(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
     ${SDL2_LIBRARIES}
+    ${LUA_LIBRARIES}
 )

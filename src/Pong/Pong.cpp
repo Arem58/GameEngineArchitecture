@@ -3,9 +3,13 @@
 #include "Components.h"
 #include "ECS/Entity.h"
 #include "System.h"
+#include "Game/ScriptingManager.h"
 
 Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT)
 {
+    ScriptingManager::init();
+    ScriptingManager::runScriptFile("Scripts/paddleMovement.lua");
+
     std::unique_ptr<Scene> gameplayScene = createGameplayScene();
     setScene(std::move(gameplayScene));
 }
@@ -35,7 +39,7 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     Entity paddle2 = gameplayScene->createEntity("paddle2", screen_width - 20, (screen_height / 2) - 50);
     paddle2.addComponent<SpeedComponent>(0, 0);
     paddle2.addComponent<SizeComponent>(20, 100);
-    paddle2.addComponent<PlayerComponent>(200, 1);
+    paddle2.addComponent<PlayerComponent>(200, 2);
 
     gameplayScene->addSetupSystem<HelloSystem>();
     gameplayScene->addRenderSystem<RectRenderSystem>();
@@ -43,6 +47,7 @@ std::unique_ptr<Scene> Pong::createGameplayScene()
     gameplayScene->addEventSystem<PlayerInputEventSystem>();
     gameplayScene->addUpdateSystem<CollisionDetectionUpdateSystem>();
     gameplayScene->addUpdateSystem<BounceUpdateSystem>();
+    gameplayScene->addUpdateSystem<EnemyMoveSystem>();
 
     return gameplayScene;
 }
