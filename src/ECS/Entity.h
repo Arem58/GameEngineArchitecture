@@ -1,5 +1,6 @@
 #pragma once
 #include <print.h>
+#include <entt/entt.hpp>
 #include "Scene/Scene.h"
 
 class Entity
@@ -18,10 +19,10 @@ public:
     }
 
     template <typename T>
-    auto& addComponent(auto&&... args)
+    auto &addComponent(auto &&...args)
     {
         return scene->r.emplace<T>(handle, std::forward<decltype(args)>(args)...);
-    };
+    }
 
     template <typename T>
     void removeComponent()

@@ -1,48 +1,51 @@
 #include <print.h>
 #include "Pong.h"
-#include "Components.h"
-#include "ECS/Entity.h"
 #include "System.h"
+#include "Components.h"
 
-Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT)
-{
-    std::unique_ptr<Scene> gameplayScene = createGameplayScene();
-    setScene(std::move(gameplayScene));
+#include "ECS/Entity.h"
+
+Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
+  Scene* gameplayScene = createGameplayScene();
+  setScene(gameplayScene);
 }
 
-Pong::~Pong()
-{
+Pong::~Pong() {
     // destructor implementation
 }
 
-std::unique_ptr<Scene> Pong::createGameplayScene()
+Scene* Pong::createGameplayScene()
 {
-    // Create a unique_ptr to hold the created scene
-    std::unique_ptr<Scene> gameplayScene = std::make_unique<Scene>("Gameplay");
+  Scene* scene = new Scene("GAMEPLAY SCENE");
 
-    Entity ball = gameplayScene->createEntity("ball", 100, 100);
-    ball.addComponent<SpeedComponent>(200, 200);
-    ball.addComponent<SizeComponent>(30, 30);
-    ball.addComponent<ColliderComponent>(false);
+  Entity white = scene->createEntity("cat1", 0, 0);
+  auto& s = white.addComponent<SpriteComponent>(
+    "Sprites/Cat/SpriteSheet.png",
+    0, 0,
+    48,
+    8,
+    1000
+  );
+  s.lastUpdate = SDL_GetTicks();
 
-    // Paddle izquierdo
-    Entity paddle = gameplayScene->createEntity("paddle1", 0, (screen_height / 2) - 50);
-    paddle.addComponent<SpeedComponent>(0, 0);
-    paddle.addComponent<SizeComponent>(20, 100);
-    paddle.addComponent<PlayerComponent>(200, 0);
+  Entity black = scene->createEntity("cat2", 20, 0);
+  black.addComponent<SpriteComponent>(
+    "Sprites/Cat/SpriteSheet.png", 
+    0, 0,
+    48,
+    8,
+    1000,
+    PixelShader{
+      [](Uint32 color) -> Uint32 { return (color == 0xF3F2C0FF) ? 0xD2B48CFF : color ; },
+      "red"
+    },
+    SDL_GetTicks()
+  );
 
-    // Paddle derecho
-    Entity paddle2 = gameplayScene->createEntity("paddle2", screen_width - 20, (screen_height / 2) - 50);
-    paddle2.addComponent<SpeedComponent>(0, 0);
-    paddle2.addComponent<SizeComponent>(20, 100);
-    paddle2.addComponent<PlayerComponent>(200, 1);
+  scene->addSetupSystem<SpriteSetupSystem>(renderer);
+  scene->addRenderSystem<SpriteRenderSystem>();
+  scene->addUpdateSystem<SpriteUpdateSystem>();
 
-    gameplayScene->addSetupSystem<HelloSystem>();
-    gameplayScene->addRenderSystem<RectRenderSystem>();
-    gameplayScene->addUpdateSystem<MovementUpdateSystem>(SCREEN_WIDTH, SCREEN_HEIGHT);
-    gameplayScene->addEventSystem<PlayerInputEventSystem>();
-    gameplayScene->addUpdateSystem<CollisionDetectionUpdateSystem>();
-    gameplayScene->addUpdateSystem<BounceUpdateSystem>();
-
-    return gameplayScene;
+  return scene;
 }
+

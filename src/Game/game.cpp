@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <print.h>
 #include "Game.h"
-#include "isDefined.h"
 
 Game::Game(const char *title, int width, int height)
 {
@@ -38,7 +37,6 @@ Game::~Game()
 
 void Game::setup()
 {
-    isDefined(currentScene, "CurrentScene is not initialized");
     currentScene->setup();
 }
 
@@ -143,10 +141,10 @@ void Game::run()
     clean();
 }
 
-void Game::setScene(std::unique_ptr<Scene> newScene) {
-    currentScene = std::move(newScene);
+void Game::setScene(Scene* newScene) {
+    currentScene = newScene;
 }
 
 Scene* Game::getCurrentScene() const {
-    return currentScene.get();
+    return currentScene;
 }

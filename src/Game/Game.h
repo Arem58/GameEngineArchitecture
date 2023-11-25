@@ -20,13 +20,11 @@ public:
 
     void run();
 
-    void setScene(std::unique_ptr<Scene> newScene);
+    void setScene(Scene* newScene);
     Scene* getCurrentScene() const;
 
 protected:
     bool isRunning;
-    int width;
-    int height;
 
     SDL_Window* window;
     SDL_Renderer* renderer;
@@ -47,5 +45,5 @@ protected:
     float dT;
 
     // scene logic
-    std::unique_ptr<Scene> currentScene;
+    Scene* currentScene;
 };

@@ -12,5 +12,5 @@ public:
     ~Pong();
 
 private:
-    std::unique_ptr<Scene> createGameplayScene();
+    Scene* createGameplayScene();
 };
