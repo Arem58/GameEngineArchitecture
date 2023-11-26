@@ -2,6 +2,7 @@
 
 #include <print.h>
 #include "ECS/System.h"
+#include <entt/entity/registry.hpp>
 
 class HelloSystem : public SetupSystem
 {
@@ -31,17 +32,17 @@ public:
     void run(SDL_Event even);
 };
 
-class CollisionDetectionUpdateSystem : public UpdateSystem
-{
-public:
-    void run(double dT);
-};
+// class CollisionDetectionUpdateSystem : public UpdateSystem
+// {
+// public:
+//     void run(double dT);
+// };
 
-class BounceUpdateSystem : public UpdateSystem
-{
-public:
-    void run(double dT);
-};
+// class BounceUpdateSystem : public UpdateSystem
+// {
+// public:
+//     void run(double dT);
+// };
 
 class SpriteSetupSystem : public SetupSystem
 {
@@ -107,4 +108,14 @@ class BoxColliderRenderSystem : public RenderSystem
 {
 public:
     void run(SDL_Renderer *renderer) override;
+};
+
+class CollisionDetectionUpdateSystem : public UpdateSystem
+{
+public:
+    void run(double dT) override;
+
+private:
+    bool checkCollision(const SDL_Rect &a, const SDL_Rect &b);
+    void handleCollision(entt::entity a, entt::entity b);
 };

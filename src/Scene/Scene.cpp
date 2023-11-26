@@ -20,7 +20,7 @@ Scene::Scene(const std::string &name)
 
     player = new Entity(r.create(), this);
     player->addComponent<TransformComponent>(80, 30);
-    player->addComponent<BoxColliderComponent>(16, 16, 16, 16);
+    player->addComponent<BoxColliderComponent>(24, 23, 16, 24);
     player->addComponent<SpeedComponent>(0, 0);
 }
 

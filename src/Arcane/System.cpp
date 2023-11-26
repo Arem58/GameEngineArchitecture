@@ -353,16 +353,75 @@ void BoxColliderRenderSystem::run(SDL_Renderer *r)
         const auto box = view.get<BoxColliderComponent>(e);
         const auto t = view.get<TransformComponent>(e);
 
+        int colliderX = (t.x + (box.xo - (box.w / 2))) * 5;
+        int colliderY = (t.y + (box.yo - (box.h / 2))) * 5;
+
         SDL_SetRenderDrawColor(r, box.color.r, box.color.g, box.color.b, 255);
 
         SDL_Rect rect = {
-            static_cast<int>(t.x),
-            static_cast<int>(t.y),
-            box.w,
-            box.h};
+            colliderX,
+            colliderY,
+            box.w * 5,
+            box.h * 5};
 
         SDL_RenderDrawRect(r, &rect);
     }
+}
+
+void CollisionDetectionUpdateSystem::run(double dT)
+{
+    auto view = scene->r.view<TransformComponent, BoxColliderComponent>();
+
+    for (auto entityA : view)
+    {
+        auto &transformA = view.get<TransformComponent>(entityA);
+        auto &colliderA = view.get<BoxColliderComponent>(entityA);
+
+        SDL_Rect rectA = {
+            (transformA.x + colliderA.xo) * 5,
+            (transformA.y + colliderA.yo) * 5,
+            colliderA.w * 5,
+            colliderA.h * 5};
+
+        for (auto entityB : view)
+        {
+            if (entityA == entityB)
+                continue; // No chequear colisión con uno mismo
+
+            auto &transformB = view.get<TransformComponent>(entityB);
+            auto &colliderB = view.get<BoxColliderComponent>(entityB);
+
+            SDL_Rect rectB = {
+                (transformB.x + colliderB.xo) * 5,
+                (transformB.y + colliderB.yo) * 5,
+                colliderB.w * 5,
+                colliderB.h * 5};
+
+            if (checkCollision(rectA, rectB))
+            {
+                // Aquí manejas la colisión
+                handleCollision(entityA, entityB);
+            }
+        }
+    }
+}
+
+bool CollisionDetectionUpdateSystem::checkCollision(const SDL_Rect &a, const SDL_Rect &b)
+{
+    // Agrega impresiones para depurar
+    std::cout << "Collider A - X: " << a.x << ", Y: " << a.y << ", W: " << a.w << ", H: " << a.h << std::endl;
+    std::cout << "Collider B - X: " << b.x << ", Y: " << b.y << ", W: " << b.w << ", H: " << b.h << std::endl;
+
+    return (a.x < b.x + b.w) && (a.x + a.w > b.x) && (a.y < b.y + b.h) && (a.y + a.h > b.y);
+}
+
+void CollisionDetectionUpdateSystem::handleCollision(entt::entity a, entt::entity b)
+{
+    auto &colliderA = scene->r.get<BoxColliderComponent>(a);
+    auto &colliderB = scene->r.get<BoxColliderComponent>(b);
+
+    colliderA.color = {255, 0, 0, 255};
+    colliderB.color = {255, 0, 0, 255};
 }
 
 // set up con noise
