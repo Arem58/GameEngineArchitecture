@@ -1,8 +1,8 @@
-#include "Pong/Pong.h"
+#include "Arcane/Arcane.h"
 
 int main()
 {
-    Pong pong = Pong();
+    Arcane pong = Arcane();
     pong.run();
 
     return 0;

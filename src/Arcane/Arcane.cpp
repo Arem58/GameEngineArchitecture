@@ -1,20 +1,20 @@
 #include <print.h>
-#include "Pong.h"
+#include "Arcane.h"
 #include "System.h"
 #include "Components.h"
 
 #include "ECS/Entity.h"
 
-Pong::Pong() : Game("Pong", SCREEN_WIDTH, SCREEN_HEIGHT) {
+Arcane::Arcane() : Game("Arcane", SCREEN_WIDTH, SCREEN_HEIGHT) {
   Scene* gameplayScene = createGameplayScene();
   setScene(gameplayScene);
 }
 
-Pong::~Pong() {
+Arcane::~Arcane() {
     // destructor implementation
 }
 
-Scene* Pong::createGameplayScene()
+Scene* Arcane::createGameplayScene()
 {
   Scene* scene = new Scene("GAMEPLAY SCENE");
 
