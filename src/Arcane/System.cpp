@@ -102,6 +102,7 @@ void TilemapSetupSystem::run()
     tilemapComponent.width = 50;
     tilemapComponent.height = 38;
     tilemapComponent.tileSize = 16;
+    tilemapComponent.tilemap.resize(tilemapComponent.width * tilemapComponent.height);
 
     Texture *waterTexture = TextureManager::LoadTexture("Sprites/Tiles/Water.png", renderer);
     Texture *grassTexture = TextureManager::LoadTexture("Sprites/Tiles/Grass.png", renderer);
