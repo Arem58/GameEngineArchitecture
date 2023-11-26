@@ -34,9 +34,8 @@ PixelShader getShader(ShaderType type)
                 Uint8 r = (color >> 24) & 0xFF;
                 Uint8 g = (color >> 16) & 0xFF;
                 Uint8 b = (color >> 8) & 0xFF;
-                Uint8 a = color & 0xFF; // Preservamos el canal alfa
+                Uint8 a = color & 0xFF; 
 
-                // Aplicar la fórmula para convertir a sepia
                 Uint8 outR = static_cast<Uint8>(std::min(255.0, r * 0.393 + g * 0.769 + b * 0.189));
                 Uint8 outG = static_cast<Uint8>(std::min(255.0, r * 0.349 + g * 0.686 + b * 0.168));
                 Uint8 outB = static_cast<Uint8>(std::min(255.0, r * 0.272 + g * 0.534 + b * 0.131));
