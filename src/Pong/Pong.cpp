@@ -20,11 +20,12 @@ Scene* Pong::createGameplayScene()
 
   Entity white = scene->createEntity("cat1", 0, 0);
   auto& s = white.addComponent<SpriteComponent>(
-    "Sprites/Cat/SpriteSheet.png",
+    "Sprites/Cat/Sprite-0002.png",
     0, 0,
     48,
-    8,
-    1000
+    0,
+    0, 
+    getShader(ShaderType::Sepia)
   );
   s.lastUpdate = SDL_GetTicks();
 
@@ -35,16 +36,13 @@ Scene* Pong::createGameplayScene()
     48,
     8,
     1000,
-    PixelShader{
-      [](Uint32 color) -> Uint32 { return (color == 0xF3F2C0FF) ? 0xD2B48CFF : color ; },
-      "red"
-    },
+    getShader(ShaderType::Negative),
     SDL_GetTicks()
   );
 
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
-  scene->addUpdateSystem<SpriteUpdateSystem>();
+  // scene->addUpdateSystem<SpriteUpdateSystem>();
 
   return scene;
 }
