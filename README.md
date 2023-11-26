@@ -1,4 +1,4 @@
-# Pong
+# Arcane
 
 ## Table of Contents
 
