@@ -344,6 +344,27 @@ void MovementUpdateSystem::run(double dT)
     }
 }
 
+void BoxColliderRenderSystem::run(SDL_Renderer *r)
+{
+    const auto view = scene->r.view<TransformComponent, BoxColliderComponent>();
+
+    for (const entt::entity e : view)
+    {
+        const auto box = view.get<BoxColliderComponent>(e);
+        const auto t = view.get<TransformComponent>(e);
+
+        SDL_SetRenderDrawColor(r, box.color.r, box.color.g, box.color.b, 255);
+
+        SDL_Rect rect = {
+            static_cast<int>(t.x),
+            static_cast<int>(t.y),
+            box.w,
+            box.h};
+
+        SDL_RenderDrawRect(r, &rect);
+    }
+}
+
 // set up con noise
 // void TilemapSetupSystem::run()
 // {

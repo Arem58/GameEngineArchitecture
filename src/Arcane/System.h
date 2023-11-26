@@ -102,3 +102,9 @@ class CameraFollowUpdateSystem : public UpdateSystem
 public:
     void run(double dT) override;
 };
+
+class BoxColliderRenderSystem : public RenderSystem
+{
+public:
+    void run(SDL_Renderer *renderer) override;
+};

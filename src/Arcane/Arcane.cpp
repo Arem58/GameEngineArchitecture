@@ -39,6 +39,7 @@ Scene *Arcane::createGameplayScene()
       getShader(ShaderType::Negative),
       SDL_GetTicks());
   // s2.lastUpdate = SDL_GetTicks();
+  wolf.addComponent<BoxColliderComponent>(16, 16, 24, 16);
 
   scene->player->addComponent<SpriteComponent>(
       "Sprites/Eleina/SPRITESHEET_RENATO_FINAL.png",
@@ -46,7 +47,7 @@ Scene *Arcane::createGameplayScene()
       48,
       8,
       1000,
-      getShader(ShaderType::Negative), 
+      getShader(ShaderType::Negative),
       SDL_GetTicks());
 
   scene->addSetupSystem<TilemapSetupSystem>(renderer);
@@ -59,6 +60,8 @@ Scene *Arcane::createGameplayScene()
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
   scene->addUpdateSystem<SpriteUpdateSystem>();
+
+  scene->addRenderSystem<BoxColliderRenderSystem>();
 
   return scene;
 }
