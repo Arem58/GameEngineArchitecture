@@ -27,6 +27,12 @@ What things you need to install the software and how to install them.
 
 ## Usage <a name = "usage"></a>
 
+Before you can use the provided scripts, you may need to grant them execution permissions. To do this, open your terminal and navigate to the project directory. Then, run the following commands:
+
+```shell
+chmod +x run.sh build.sh configure.sh
+```
+
 To run CMake and execute the build, run the following command:
 ```
  ./run.sh 
