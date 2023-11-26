@@ -22,13 +22,7 @@ public:
 class MovementUpdateSystem : public UpdateSystem
 {
 public:
-    MovementUpdateSystem(int screen_width, int screen_height);
-
     void run(double dT) override;
-
-private:
-    int screen_width;
-    int screen_height;
 };
 
 class PlayerInputEventSystem : public EventSystem
@@ -95,4 +89,16 @@ class AutoTilingSetupSystem : SetupSystem
 {
 public:
     void run() override;
+};
+
+class PlayerSpriteUpdateSystem : public UpdateSystem
+{
+public:
+    void run(double dT) override;
+};
+
+class CameraFollowUpdateSystem : public UpdateSystem
+{
+public:
+    void run(double dT) override;
 };

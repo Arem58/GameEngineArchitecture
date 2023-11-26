@@ -58,8 +58,8 @@ void SpriteRenderSystem::run(SDL_Renderer *renderer)
         int scale = 5;
 
         texture->render(
-            transformComponent.position.x * scale,
-            transformComponent.position.y * scale,
+            transformComponent.x * scale,
+            transformComponent.y * scale,
             48 * scale,
             48 * scale,
             &clip);
@@ -136,9 +136,8 @@ void TilemapSetupSystem::run()
     Texture *piso3 = TextureManager::LoadTexture("Sprites/Tiles/piso-0003.png", renderer);
     Texture *piso4 = TextureManager::LoadTexture("Sprites/Tiles/piso-0004.png", renderer);
 
-    // pared interna 
+    // pared interna
     Texture *paredIn = TextureManager::LoadTexture("Sprites/Tiles/pared.png", renderer);
-
 
     std::ifstream mapFile("assets/Map/map.txt");
     std::string line;
@@ -247,6 +246,59 @@ void TilemapRenderSystem::run(SDL_Renderer *renderer)
                     size * scale);
             }
         }
+    }
+}
+
+void PlayerInputEventSystem::run(SDL_Event event)
+{
+    auto &playerMovement = scene->player->get<SpeedComponent>();
+    int speed = 70;
+
+    if (event.type == SDL_KEYDOWN)
+    {
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_a:
+            playerMovement.x = -speed;
+            break;
+        case SDLK_d:
+            playerMovement.x = speed;
+            break;
+        case SDLK_w:
+            playerMovement.y = -speed;
+            break;
+        case SDLK_s:
+            playerMovement.y = speed;
+            break;
+        }
+    }
+    else if (event.type == SDL_KEYUP)
+    {
+        switch (event.key.keysym.sym)
+        {
+        case SDLK_a:
+        case SDLK_d:
+            playerMovement.x = 0;
+            break;
+
+        case SDLK_w:
+        case SDLK_s:
+            playerMovement.y = 0;
+            break;
+        }
+    }
+}
+
+void MovementUpdateSystem::run(double dT)
+{
+    const auto view = scene->r.view<TransformComponent, SpeedComponent>();
+    for (const entt::entity e : view)
+    {
+        auto &pos = view.get<TransformComponent>(e);
+        const auto vel = view.get<SpeedComponent>(e);
+
+        pos.x += vel.x * dT;
+        pos.y += vel.y * dT;
     }
 }
 

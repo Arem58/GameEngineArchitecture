@@ -1,13 +1,11 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include <string>
 #include <vector>
 #include "ECS/Entity.h"
 #include "Game/Graphics/PixelShader.h"
 #include "Game/Graphics/Texture.h"
 #include "Game/Graphics/Tile.h"
-
 
 struct NameComponent
 {
@@ -16,9 +14,8 @@ struct NameComponent
 
 struct TransformComponent
 {
-    glm::vec2 position;
-    // glm::vec2 scale;
-    // float rotation;
+    int x;
+    int y;
 };
 
 // El transform component siempre se va a mover a traves de este con delta time (pixeles x segundo)
@@ -41,9 +38,23 @@ struct SpriteComponent
     Uint32 lastUpdate = 0;
 };
 
-struct TilemapComponent {
-  std::vector<Tile> tilemap;
-  int width;
-  int height;
-  int tileSize;
+struct TilemapComponent
+{
+    std::vector<Tile> tilemap;
+    int width;
+    int height;
+    int tileSize;
+};
+
+struct CameraComponent
+{
+    int zoom = 1;
+    int vw = 0;
+    int vh = 0;
+};
+
+struct WorldComponent
+{
+    int width = 0;
+    int height = 0;
 };

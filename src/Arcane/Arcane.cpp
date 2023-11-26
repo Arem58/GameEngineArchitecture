@@ -5,18 +5,20 @@
 
 #include "ECS/Entity.h"
 
-Arcane::Arcane() : Game("Arcane", SCREEN_WIDTH, SCREEN_HEIGHT) {
-  Scene* gameplayScene = createGameplayScene();
+Arcane::Arcane() : Game("Arcane", SCREEN_WIDTH, SCREEN_HEIGHT)
+{
+  Scene *gameplayScene = createGameplayScene();
   setScene(gameplayScene);
 }
 
-Arcane::~Arcane() {
-    // destructor implementation
+Arcane::~Arcane()
+{
+  // destructor implementation
 }
 
-Scene* Arcane::createGameplayScene()
+Scene *Arcane::createGameplayScene()
 {
-  Scene* scene = new Scene("GAMEPLAY SCENE");
+  Scene *scene = new Scene("GAMEPLAY SCENE");
 
   // Entity normal = scene->createEntity("cat1", 0, 0);
   // auto& s = normal.addComponent<SpriteComponent>(
@@ -33,24 +35,25 @@ Scene* Arcane::createGameplayScene()
   //   0, 0,
   //   48,
   //   0,
-  //   0, 
+  //   0,
   //   getShader(ShaderType::Sepia)
   // );
   // s2.lastUpdate = SDL_GetTicks();
 
-  Entity black = scene->createEntity("cat3", 40, 0);
-  black.addComponent<SpriteComponent>(
-    "Sprites/Eleina/SPRITESHEET_RENATO_FINAL.png", 
-    0, 0,
-    48,
-    8,
-    1000,
-    getShader(ShaderType::Negative),
-    SDL_GetTicks()
-  );
+  scene->player->addComponent<SpriteComponent>(
+      "Sprites/Eleina/SPRITESHEET_RENATO_FINAL.png",
+      0, 0,
+      48,
+      0,
+      0,
+      getShader(ShaderType::Negative));
 
   scene->addSetupSystem<TilemapSetupSystem>(renderer);
   scene->addRenderSystem<TilemapRenderSystem>();
+
+  scene->addEventSystem<PlayerInputEventSystem>();
+  // scene->addUpdateSystem<PlayerSpriteUpdateSystem>();
+  scene->addUpdateSystem<MovementUpdateSystem>();
 
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
   scene->addRenderSystem<SpriteRenderSystem>();
@@ -58,4 +61,3 @@ Scene* Arcane::createGameplayScene()
 
   return scene;
 }
-
