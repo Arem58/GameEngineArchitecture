@@ -25,10 +25,13 @@ public:
 
     entt::registry r;
 
+    Entity* world;
+
     Entity createEntity(
         const std::string &name = "NO NAME",
         int x = 0,
         int y = 0);
+
 
     template <typename T>
     void addSetupSystem(auto &&...args)

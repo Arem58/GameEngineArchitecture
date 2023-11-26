@@ -2,7 +2,12 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <vector>
+#include "ECS/Entity.h"
 #include "Game/Graphics/PixelShader.h"
+#include "Game/Graphics/Texture.h"
+#include "Game/Graphics/Tile.h"
+
 
 struct NameComponent
 {
@@ -34,4 +39,11 @@ struct SpriteComponent
     PixelShader shader = {nullptr, ""};
 
     Uint32 lastUpdate = 0;
+};
+
+struct TilemapComponent {
+  std::vector<Tile> tilemap;
+  int width;
+  int height;
+  int tileSize;
 };

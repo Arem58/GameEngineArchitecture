@@ -13,7 +13,10 @@ Scene::Scene(const std::string &name)
     : name(name)
 {
     print("Scene Created: ", name);
-};
+
+    world = new Entity(r.create(), this);
+    world->addComponent<TilemapComponent>();
+}
 
 Scene::~Scene()
 {

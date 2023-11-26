@@ -1,8 +1,12 @@
 #include <print.h>
 #include <SDL2/SDL.h>
+#include <FastNoise.h>
+#include <ctime>
+#include <cstdlib>
 #include "System.h"
 #include "Components.h"
 
+#include "ECS/Entity.h"
 #include "ECS/Componets.h"
 #include "Game/Graphics/TextureManager.h"
 
@@ -77,11 +81,80 @@ void SpriteUpdateSystem::run(double dT)
                 timeSinceLastUpdate /
                 spriteComponent.animationDuration * spriteComponent.animationFrames);
 
-            if (framesToUpdate > 0 ){
+            if (framesToUpdate > 0)
+            {
                 spriteComponent.xIndex += framesToUpdate;
                 spriteComponent.xIndex %= spriteComponent.animationFrames;
                 spriteComponent.lastUpdate = now;
             }
+        }
+    }
+}
+
+TilemapSetupSystem::TilemapSetupSystem(SDL_Renderer *renderer)
+    : renderer(renderer) {}
+
+TilemapSetupSystem::~TilemapSetupSystem() {}
+
+void TilemapSetupSystem::run()
+{
+    auto &tilemapComponent = scene->world->get<TilemapComponent>();
+    tilemapComponent.width = 50;
+    tilemapComponent.height = 38;
+    tilemapComponent.tileSize = 16;
+
+    Texture *waterTexture = TextureManager::LoadTexture("Sprites/Tiles/Water.png", renderer);
+    Texture *grassTexture = TextureManager::LoadTexture("Sprites/Tiles/Grass.png", renderer);
+
+    FastNoiseLite noise;
+    noise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+
+    std::srand(std::time(nullptr));
+    float offsetX = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    float offsetY = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    float zoom = 20.0f;
+
+    for (int y = 0; y < tilemapComponent.height; y++)
+    {
+        for (int x = 0; x < tilemapComponent.width; x++)
+        {
+            float factor = noise.GetNoise(
+                static_cast<float>(x + offsetX) * zoom,
+                static_cast<float>(y + offsetY) * zoom);
+
+            int index = y * tilemapComponent.width + x;
+            Tile &tile = tilemapComponent.tilemap[index];
+
+            if (factor < 0.5)
+            {
+                tile.texture = grassTexture;
+            }
+            else
+            {
+                tile.texture = waterTexture;
+            }
+        }
+    }
+}
+
+void TilemapRenderSystem::run(SDL_Renderer *renderer)
+{
+    auto &tilemapComponent = scene->world->get<TilemapComponent>();
+    int width = tilemapComponent.width;
+    int height = tilemapComponent.height;
+    int size = tilemapComponent.tileSize;
+    int scale = 5;
+
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            Tile &tile = tilemapComponent.tilemap[y * width + x];
+            tile.texture->render(
+                x * size * scale,
+                y * size * scale,
+                size * scale,
+                size * scale);
         }
     }
 }
