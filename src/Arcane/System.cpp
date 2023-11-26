@@ -289,6 +289,48 @@ void PlayerInputEventSystem::run(SDL_Event event)
     }
 }
 
+void PlayerSpriteUpdateSystem::run(double dT)
+{
+    auto &playerMovement = scene->player->get<SpeedComponent>();
+    auto &playerSprite = scene->player->get<SpriteComponent>();
+
+    if (playerMovement.x < 0)
+    {
+        playerSprite.yIndex = 7;
+    }
+    else if (playerMovement.x > 0)
+    {
+        playerSprite.yIndex = 6;
+    }
+    else if (playerMovement.y < 0)
+    {
+        playerSprite.yIndex = 5;
+    }
+    else if (playerMovement.y > 0)
+    {
+        playerSprite.yIndex = 4;
+    }
+    else
+    {
+        if (playerSprite.yIndex == 7)
+        {
+            playerSprite.yIndex = 2;
+        }
+        else if (playerSprite.yIndex == 6)
+        {
+            playerSprite.yIndex = 3;
+        }
+        else if (playerSprite.yIndex == 5)
+        {
+            playerSprite.yIndex = 1;
+        }
+        else if (playerSprite.yIndex == 4)
+        {
+            playerSprite.yIndex = 0;
+        }
+    }
+}
+
 void MovementUpdateSystem::run(double dT)
 {
     const auto view = scene->r.view<TransformComponent, SpeedComponent>();

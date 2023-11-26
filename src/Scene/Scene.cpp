@@ -19,7 +19,7 @@ Scene::Scene(const std::string &name)
     // world->addComponent<WorldComponent>(800 * 5, 600 * 5);
 
     player = new Entity(r.create(), this);
-    player->addComponent<TransformComponent>(20, 0);
+    player->addComponent<TransformComponent>(80, 30);
     player->addComponent<SpeedComponent>(0, 0);
 }
 

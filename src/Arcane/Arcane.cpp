@@ -29,30 +29,31 @@ Scene *Arcane::createGameplayScene()
   //   0
   // );
 
-  // Entity white = scene->createEntity("cat2", 20, 0);
-  // auto& s2 = white.addComponent<SpriteComponent>(
-  //   "Sprites/Cat/Sprite-0002.png",
-  //   0, 0,
-  //   48,
-  //   0,
-  //   0,
-  //   getShader(ShaderType::Sepia)
-  // );
+  Entity wolf = scene->createEntity("wolf", 15, 30);
+  auto &s = wolf.addComponent<SpriteComponent>(
+      "Sprites/Cat/lobo_spritesheet.png",
+      0, 0,
+      48,
+      8,
+      1000,
+      getShader(ShaderType::Negative),
+      SDL_GetTicks());
   // s2.lastUpdate = SDL_GetTicks();
 
   scene->player->addComponent<SpriteComponent>(
       "Sprites/Eleina/SPRITESHEET_RENATO_FINAL.png",
       0, 0,
       48,
-      0,
-      0,
-      getShader(ShaderType::Negative));
+      8,
+      1000,
+      getShader(ShaderType::Negative), 
+      SDL_GetTicks());
 
   scene->addSetupSystem<TilemapSetupSystem>(renderer);
   scene->addRenderSystem<TilemapRenderSystem>();
 
   scene->addEventSystem<PlayerInputEventSystem>();
-  // scene->addUpdateSystem<PlayerSpriteUpdateSystem>();
+  scene->addUpdateSystem<PlayerSpriteUpdateSystem>();
   scene->addUpdateSystem<MovementUpdateSystem>();
 
   scene->addSetupSystem<SpriteSetupSystem>(renderer);
