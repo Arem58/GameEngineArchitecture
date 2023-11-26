@@ -18,8 +18,17 @@ Scene* Arcane::createGameplayScene()
 {
   Scene* scene = new Scene("GAMEPLAY SCENE");
 
-  Entity white = scene->createEntity("cat1", 0, 0);
-  auto& s = white.addComponent<SpriteComponent>(
+  Entity normal = scene->createEntity("cat1", 0, 0);
+  auto& s = normal.addComponent<SpriteComponent>(
+    "Sprites/Cat/Sprite-0002.png",
+    0, 0,
+    48,
+    0,
+    0
+  );
+
+  Entity white = scene->createEntity("cat2", 20, 0);
+  auto& s2 = white.addComponent<SpriteComponent>(
     "Sprites/Cat/Sprite-0002.png",
     0, 0,
     48,
@@ -27,9 +36,9 @@ Scene* Arcane::createGameplayScene()
     0, 
     getShader(ShaderType::Sepia)
   );
-  s.lastUpdate = SDL_GetTicks();
+  s2.lastUpdate = SDL_GetTicks();
 
-  Entity black = scene->createEntity("cat2", 20, 0);
+  Entity black = scene->createEntity("cat3", 40, 0);
   black.addComponent<SpriteComponent>(
     "Sprites/Cat/SpriteSheet.png", 
     0, 0,
